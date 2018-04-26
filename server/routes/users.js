@@ -21,10 +21,10 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-router.get('/cart',(req,res,next)=>{
-	let userId = '100000077';
-	User.findOne({userId:userId},(err,doc)=>{
-		if (err) {
+router.get('/cartlist',(req,res,next)=>{
+	let name = req.cookies.token.substring(13)
+	User.findOne({userName:name},(err,doc)=>{
+		if (!doc) {
 			res.json({
 				status:'1',
 				msg:err.message,
@@ -191,6 +191,6 @@ router.post('/addcart',(req,res,next)=>{
       }
     }
   })
-})
+});
 
 module.exports = router;
