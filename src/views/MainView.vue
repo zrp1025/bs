@@ -125,7 +125,7 @@ export default {
   methods: {
     getBookList() {
       if (this.bookList.length<2) {
-        axios.get('/v2/book/search?tag=新书速递&2018&count=15&start=9').then((response)=>{
+        axios.get('/v2/book/search?tag=高分&2018&count=9').then((response)=>{
           let res = response.data.books;
           this.bookList=res;
           console.log(res);
