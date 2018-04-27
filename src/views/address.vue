@@ -14,7 +14,7 @@
               <td class="addadd">{{item.streetName}}</td>
               <td class="addtel">{{item.tel}}</td>
               <td class="del">
-                <svg class="icon" aria-hidden="true">
+                <svg class="icon" aria-hidden="true" @click="deleteAddress">
                   <use xlink:href="#icon-shanchu"></use>
                 </svg>
               </td>
@@ -93,6 +93,9 @@ import axios from 'axios';
           this.checkIndex = index;
           this.selectAddress = item;
       },
+      deleteAddress(){
+        alert('abc')
+      }
     },
     mounted(){
       this.getAddress();
