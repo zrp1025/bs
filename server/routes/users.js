@@ -133,6 +133,9 @@ router.post('/signin',(req,res,next)=>{
 router.post('/addcart',(req,res,next)=>{
   let name = req.cookies.token.slice(13),
       bookmsg = req.body.bookmessage;
+      if (!parseInt(bookmsg.price)) {
+        bookmsg.price=bookmsg.price.slice(3);
+      }
   let product = {
     productId : bookmsg.isbn10,
     productName : bookmsg.title,
@@ -268,7 +271,31 @@ router.post('/deletebook',(req,res,next)=>{
       })
     }
   })
+});
+
+//查询地址
+router.get('/address',(req,res,next)=>{
+  let name = req.cookies.token.substring(13);
+  User.findOne({userName:name},(err,doc)=>{
+    if(!doc){
+      res.json({
+        status:'1',
+        msg:'请求地址失败',
+        result:''
+      })
+    }else{
+      res.json({
+        status:'0',
+        msg:'请求地址成功',
+        result:doc.addressList,
+        cart: doc.cartList
+      })
+    }
+  })
 })
+
+//删除地址
+
 
 
 

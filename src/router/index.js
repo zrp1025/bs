@@ -6,6 +6,7 @@ import Books from '@/views/books'
 import CartList from '@/views/cartList'
 import SearchList from '@/views/SearchList'
 import BookList from '@/components/BookList'
+import Address from '@/views/address'
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/searchlist',
       name: 'SearchList',
       component: SearchList
+    },
+    {
+      path: '/address',
+      name: 'Address',
+      component: Address
     },
 
   ]
