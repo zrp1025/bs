@@ -7,6 +7,7 @@ import CartList from '@/views/cartList'
 import SearchList from '@/views/SearchList'
 import BookList from '@/components/BookList'
 import Address from '@/views/address'
+import Adminindex from '@/views/adminindex'
 
 Vue.use(Router)
 
@@ -42,6 +43,11 @@ export default new Router({
       path: '/address',
       name: 'Address',
       component: Address
+    },
+    {
+      path: '/admin',
+      name: 'Adminindex',
+      component: Adminindex
     },
 
   ]
