@@ -28,7 +28,6 @@
           <div id="pubdate">出版时间：{{bookList[0].pubdate}}</div>
           <div id="binding">装帧：{{bookList[0].binding}}</div>
           <div id="isbn">ISBN：{{bookList[0].isbn10}}</div>
-
         </div>
       </div>
   </div>
