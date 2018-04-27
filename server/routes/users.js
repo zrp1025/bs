@@ -193,4 +193,83 @@ router.post('/addcart',(req,res,next)=>{
   })
 });
 
+//是否选中
+router.post('/checked',(req,res,next)=>{
+  let name = req.cookies.token.substring(13);
+      productId = req.body.productId;
+  User.findOne({userName:name},(err,doc)=>{
+    if (!doc) {
+      res.json({
+        status:'1',
+        msg:'选中错误',
+        result:''
+      })
+    }else{
+      doc.cartList.forEach((item)=>{
+        if (productId==item.productId) {
+          if (item.checked==0) {
+            item.checked='1'
+          }else{
+            item.checked='0'
+          }
+        }
+      });
+      doc.save((err2,doc2)=>{
+        if (err2) {
+          res.json({
+            status:'1',
+            msg:err2.message,
+            result:''
+          })
+        }else{
+          res.json({
+            status:'0',
+            msg:'选中成功',
+            result:'suc'
+          })
+        }
+      })
+    }
+  })
+})
+
+//删除书籍
+router.post('/deletebook',(req,res,next)=>{
+  let name = req.cookies.token.substring(13);
+      productId = req.body.productId;
+  User.findOne({userName:name},(err,doc)=>{
+    if (!doc) {
+      res.json({
+        status:'1',
+        msg:'删除失败',
+        result:''
+      })
+    }else{
+      doc.cartList.forEach((item,index)=>{
+        // var i='';
+        if (productId==item.productId) {
+          doc.cartList.splice(index,1);
+        }
+      });
+      doc.save((err2,doc2)=>{
+        if (err2) {
+          res.json({
+            status:'1',
+            msg:err2.message,
+            result:''
+          })
+        }else{
+          res.json({
+            status:'0',
+            msg:'删除成功',
+            result:'suc'
+          })
+        }
+      })
+    }
+  })
+})
+
+
+
 module.exports = router;
