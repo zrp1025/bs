@@ -1,5 +1,6 @@
 <template>
   <div>
+    <nav-header></nav-header>
     <div id="wrapper" >
       <div class="title">填写并核对订单信息:</div>
           <table style="width:100%;height:50px;">
@@ -43,6 +44,7 @@
   </div>
 </template>
 <script>
+import NavHeader from "@/components/NavHeader"
 import axios from 'axios';
   export default{
     data(){
@@ -55,7 +57,7 @@ import axios from 'axios';
       }
     },
     components:{
-
+      NavHeader
     },
     computed:{
       checkgoods(){

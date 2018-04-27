@@ -1,5 +1,7 @@
 <template>
     <!-- <OneBookShow :book="bookList" :imgb="bookList.image" /> -->
+  <div>
+    <nav-header></nav-header>
     <div class="content" >
       <div style="margin-left:5%;color:#777">图书>详情页</div>
       <div class="topbox">
@@ -31,9 +33,12 @@
         </div>
       </div>
   </div>
+  </div>
+
 
 </template>
 <script>
+import NavHeader from "@/components/NavHeader"
 import axios from 'axios'
 import OneBookShow from './oneBookShow'
   export default{
@@ -46,7 +51,8 @@ import OneBookShow from './oneBookShow'
     },
     components:{
       axios,
-      OneBookShow
+      OneBookShow,
+      NavHeader
     },
     computed:{
       hcimg(){

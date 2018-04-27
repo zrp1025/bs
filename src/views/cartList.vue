@@ -1,5 +1,6 @@
 <template>
   <div>
+    <nav-header></nav-header>
     <div id="wrapper">
       <table style="width:100%;height:50px;">
         <tr>
@@ -48,6 +49,7 @@
   </div>
 </template>
 <script>
+import NavHeader from "@/components/NavHeader"
 import axios from 'axios'
   export default{
     data(){
@@ -57,7 +59,7 @@ import axios from 'axios'
       }
     },
     components:{
-
+      NavHeader
     },
     computed:{
       goodnum(){

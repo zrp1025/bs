@@ -1,80 +1,85 @@
 <!-- 红：#c74637  黄：#aa9960 褐: #3a3837  绿: #5c8084 蓝: #17344a -->
 <template>
-<div class="content" style="position:relative;top:-90px;">
   <div>
-    <swiper :options="swiperOption" ref="mySwiper">
-     <swiper-slide>  <img src="./../assets/img/bg.jpg" style="width:100%;height:500px;" /></swiper-slide>
-     <swiper-slide>  <img src="./../assets/img/bg1.jpg" style="width:100%;height:500px;" /></swiper-slide>
-     <swiper-slide>  <img src="./../assets/img/bg2.jpg" style="width:100%;height:500px;" /></swiper-slide>
-     <swiper-slide>  <img src="./../assets/img/bg4.jpg" style="width:100%;height:500px;" /></swiper-slide>
-     <swiper-slide>  <img src="./../assets/img/bg6.jpg" style="width:100%;height:500px;" /></swiper-slide>
-   </swiper>
+    <nav-header></nav-header>
+    <div class="content" style="position:relative;top:-90px;">
+      <div>
+        <swiper :options="swiperOption" ref="mySwiper">
+         <swiper-slide>  <img src="./../assets/img/bg.jpg" style="width:100%;height:500px;" /></swiper-slide>
+         <swiper-slide>  <img src="./../assets/img/bg1.jpg" style="width:100%;height:500px;" /></swiper-slide>
+         <swiper-slide>  <img src="./../assets/img/bg2.jpg" style="width:100%;height:500px;" /></swiper-slide>
+         <swiper-slide>  <img src="./../assets/img/bg4.jpg" style="width:100%;height:500px;" /></swiper-slide>
+         <swiper-slide>  <img src="./../assets/img/bg6.jpg" style="width:100%;height:500px;" /></swiper-slide>
+       </swiper>
+      </div>
+      <div class="bgtext" style="z-index:2;" @click="badCartOpen">
+        <p>#在Thinking</p>
+        <p style="margin-left:3em;">阅书，读己......</p>
+      </div>
+      <div class="classify" style="position:relative;top:-4px;">
+        <div class="new classbox" @click='toNewBook'>
+          <div class="classbox-book1">
+            <div>New Arrivals</div>
+            <div>新书速递</div>
+            <div>View all></div>
+          </div>
+          <div class="screen1">
+          </div>
+        </div>
+        <div class="best classbox" @click='toBestBook'>
+          <div class="classbox-book2">
+            <div>Best Sellers</div>
+            <div>畅销书籍</div>
+            <div>View all></div>
+          </div>
+          <div class="screen2"></div>
+        </div>
+        <div class="kid classbox" @click='toKidBook'>
+          <div class="classbox-book3">
+            <div>Kid Books</div>
+            <div>儿童书籍</div>
+            <div>View all></div>
+          </div>
+          <div class="screen3"></div>
+        </div>
+      </div>
+      <div class="featured">
+        <div class="featuredtitle">
+          <p id="p1">最受关注图书榜单</p>
+          <p id="p2">Featured Products</p>
+        </div>
+        <div class="showbook">
+          <div v-for="item in bookList">
+            <book-show @toOneBook="toOneBook(item)" :imgb="item.images.large" :name='item.title' :author='item.author[0]' :publisher='item.publisher' :price='item.price' @addcart="addcart(item)"></book-show>
+          </div>
+        </div>
+      </div>
+      <MessageBox :modalShow='sucCartshow' >
+        <div style="display:flex;align-items:center;flex-direction:column;">
+          <svg class="icon" aria-hidden="true" style="font-size:100px;">
+            <use xlink:href="#icon-chenggong"></use>
+          </svg>
+          <p style="color:#aa9960;font-size:2em;font-weight:400;position:absolute;top:110px;">
+            加入购物车成功
+          </p>
+        </div>
+      </MessageBox>
+      <MessageBox :modalShow='badCartshow' >
+        <div style="display:flex;align-items:center;flex-direction:column;">
+          <svg class="icon" aria-hidden="true" style="font-size:100px;">
+            <use xlink:href="#icon-shibai"></use>
+          </svg>
+          <p style="color:#aa9960;font-size:2em;font-weight:400;position:absolute;top:110px;">
+            加入购物车失败
+          </p>
+        </div>
+      </MessageBox>
+    </div>
   </div>
-  <div class="bgtext" style="z-index:2;" @click="badCartOpen">
-    <p>#在Thinking</p>
-    <p style="margin-left:3em;">阅书，读己......</p>
-  </div>
-  <div class="classify" style="position:relative;top:-4px;">
-    <div class="new classbox" @click='toNewBook'>
-      <div class="classbox-book1">
-        <div>New Arrivals</div>
-        <div>新书速递</div>
-        <div>View all></div>
-      </div>
-      <div class="screen1">
-      </div>
-    </div>
-    <div class="best classbox" @click='toBestBook'>
-      <div class="classbox-book2">
-        <div>Best Sellers</div>
-        <div>畅销书籍</div>
-        <div>View all></div>
-      </div>
-      <div class="screen2"></div>
-    </div>
-    <div class="kid classbox" @click='toKidBook'>
-      <div class="classbox-book3">
-        <div>Kid Books</div>
-        <div>儿童书籍</div>
-        <div>View all></div>
-      </div>
-      <div class="screen3"></div>
-    </div>
-  </div>
-  <div class="featured">
-    <div class="featuredtitle">
-      <p id="p1">最受关注图书榜单</p>
-      <p id="p2">Featured Products</p>
-    </div>
-    <div class="showbook">
-      <div v-for="item in bookList">
-        <book-show @toOneBook="toOneBook(item)" :imgb="item.images.large" :name='item.title' :author='item.author[0]' :publisher='item.publisher' :price='item.price' @addcart="addcart(item)"></book-show>
-      </div>
-    </div>
-  </div>
-  <MessageBox :modalShow='sucCartshow' >
-    <div style="display:flex;align-items:center;flex-direction:column;">
-      <svg class="icon" aria-hidden="true" style="font-size:100px;">
-        <use xlink:href="#icon-chenggong"></use>
-      </svg>
-      <p style="color:#aa9960;font-size:2em;font-weight:400;position:absolute;top:110px;">
-        加入购物车成功
-      </p>
-    </div>
-  </MessageBox>
-  <MessageBox :modalShow='badCartshow' >
-    <div style="display:flex;align-items:center;flex-direction:column;">
-      <svg class="icon" aria-hidden="true" style="font-size:100px;">
-        <use xlink:href="#icon-shibai"></use>
-      </svg>
-      <p style="color:#aa9960;font-size:2em;font-weight:400;position:absolute;top:110px;">
-        加入购物车失败
-      </p>
-    </div>
-  </MessageBox>
-</div>
+
 </template>
 <script>
+import NavHeader from "@/components/NavHeader"
 import axios from 'axios'
 import BookShow from '@/components/BookShow'
 import MessageBox from "@/components/messageBox"
@@ -110,8 +115,8 @@ export default {
     BookShow,
     swiper,
     swiperSlide,
-    MessageBox
-
+    MessageBox,
+    NavHeader
   },
   computed: {
     booksList:function(){

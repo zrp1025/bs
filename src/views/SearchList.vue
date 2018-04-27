@@ -1,20 +1,24 @@
 <template>
-  <div class="booklist">
-    <div class="featured">
-      <div style="margin-left:30px;color:#aa9960;">
-        <p>全部商品 > 搜索"{{msg}}" 共{{bookList.length}}个结果</p>
-      </div>
-      <div class="showbook">
-        <div v-for="item in bookList">
-          <book-show @toOneBook="toOneBook(item)" :imgb="item.images['large']" :name='item.title' :author='item.author[0]' :publisher='item.publisher' :price='item.price' @addcart="addcart(item)"></book-show>
+  <div>
+    <nav-header></nav-header>
+    <div class="booklist">
+      <div class="featured">
+        <div style="margin-left:30px;color:#aa9960;">
+          <p>全部商品 > 搜索"{{msg}}" 共{{bookList.length}}个结果</p>
+        </div>
+        <div class="showbook">
+          <div v-for="item in bookList">
+            <book-show @toOneBook="toOneBook(item)" :imgb="item.images['large']" :name='item.title' :author='item.author[0]' :publisher='item.publisher' :price='item.price' @addcart="addcart(item)"></book-show>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
 </template>
 <script>
+import NavHeader from "@/components/NavHeader"
 import BookShow from '@/components/BookShow'
-
 import axios from 'axios'
   export default{
     data(){
@@ -25,7 +29,8 @@ import axios from 'axios'
       }
     },
     components:{
-      BookShow
+      BookShow,
+      NavHeader
     },
     computed:{
 
