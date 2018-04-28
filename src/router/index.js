@@ -8,6 +8,10 @@ import SearchList from '@/views/SearchList'
 import BookList from '@/components/BookList'
 import Address from '@/views/address'
 import Adminindex from '@/views/adminindex'
+import Adminalllist from '@/views/adminalllist'
+import Adminissend from '@/views/adminisend'
+import Adminnosend from '@/views/adminnosend'
+import Adminalluser from '@/views/adminalluser'
 
 Vue.use(Router)
 
@@ -46,8 +50,26 @@ export default new Router({
     },
     {
       path: '/admin',
-      name: 'Adminindex',
-      component: Adminindex
+      component: Adminindex,
+      children: [
+        {
+          path: '/',
+          component: Adminalllist
+        },
+        {
+          path: '/adminnosend',
+          component: Adminnosend
+        },
+        {
+          path: '/adminissend',
+          component: Adminissend
+        },
+        {
+          path: '/adminalluser',
+          component: Adminalluser
+        },
+
+      ]
     },
 
   ]
