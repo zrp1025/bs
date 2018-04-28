@@ -99,7 +99,8 @@ router.get('/checklogin',(req,res,next)=>{
 //注册
 router.post('/signin',(req,res,next)=>{
   let Name = req.body.userName,
-      Pwd  = req.body.userPwd;
+      Pwd  = req.body.userPwd,
+      userId = parseInt(Math.random()*1000000000)
   let arr = [{userId:100000003,userName:Name,userPwd:Pwd}]
   User.findOne({userName:Name},(err,doc)=>{
     if (doc) {
@@ -296,7 +297,24 @@ router.get('/address',(req,res,next)=>{
 
 //删除地址
 
-
+//查询所有信息
+router.get('/all',(req,res,next)=>{
+  User.find((err,doc)=>{
+    if (!doc) {
+      res.json({
+        status:'1',
+        msg:'查询失败',
+        result:''
+      })
+    }else{
+      res.json({
+        status:'0',
+        msg:'查询成功',
+        result:doc
+      })
+    }
+  })
+})
 
 
 module.exports = router;

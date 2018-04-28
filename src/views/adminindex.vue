@@ -2,31 +2,30 @@
 <div id="container">
   <div id="middle">
     <div id="middle_content">
-      middle_content<br>主内容区域<br>主内容区域
-      fasdf
+      <router-view></router-view>
     </div>
   </div>
   <div id="left">
-    <img src="@/assets/img/admin.png" style="border-radius:50px;margin-top:30px;" width="100px" height="100px" />
-    <img src="@/assets/img/title.png" width="80%" height="80px" />
-    <div class="navbox" >
-      TIETGEN
+    <img src="@/assets/img/admin.png" style="border-radius:120px;margin-top:30px;" width="120px" height="120px" />
+    <img src="@/assets/img/title.png" width="80%" height="100px" />
+    <div class="navbox" @click="toalllist" >
+      查询所有订单
     </div>
-    <div class="navbox" style="background:#17344a">
-      TIETGEN
+    <div class="navbox" @click="tonosend" style="background:#17344a">
+      未发货
     </div>
-    <div class="navbox" style="background:#aa9960">
-      TIETGEN
+    <div class="navbox" @click="toissend" style="background:#aa9960">
+      已发货
     </div>
-    <div class="navbox" style="background:#c74637">
-      TIETGEN
+    <div class="navbox" @click="toalluser" style="background:#c74637">
+      管理用户信息
     </div>
-    <div class="navbox" style="background:#64ab8a">
+    <!-- <div class="navbox" style="background:#64ab8a">
       TIETGEN
     </div>
     <div class="navbox" style="background:#a8a8ac">
       TIETGEN
-    </div>
+    </div> -->
   </div>
 </div>
 </template>
@@ -42,6 +41,28 @@ export default {
 
   },
   methods: {
+    toalllist(){
+      this.$router.push({
+        path:'/admin'
+      })
+    },
+
+    tonosend(){
+      this.$router.push({
+        path:'/adminnosend'
+      })
+    },
+
+    toissend(){
+      this.$router.push({
+        path:'/adminissend'
+      })
+    },
+    toalluser(){
+      this.$router.push({
+        path:'/adminalluser'
+      })
+    },
 
   },
   mounted() {
@@ -51,7 +72,7 @@ export default {
 </script>
 <style scoped>
 #container {
-  overflow: hidden;
+  /* overflow: hidden; */
   margin: 10px 0;
   margin-top: -80px;
 }
@@ -61,7 +82,8 @@ export default {
   float: left;
   width: 200px;
   margin-left: -100%;
-  height: 700px;
+  height: auto;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -69,13 +91,12 @@ export default {
 }
 
 #middle {
+  overflow-y: auto;
   float: left;
   width: 100%;
 }
 
 #middle_content {
-  border: 1px solid red;
-
   height: 600px;
   margin: 0 0 0 210px;
 }
@@ -84,13 +105,15 @@ export default {
   height: 70px;
   background: #5c8084;
   color: #fff;
-  font-size: 1.5em;
+  font-size: 1em;
   font-weight: 900;
   line-height: 70px;
   text-align: center;
   cursor: pointer;
+  position: relative;
+  top: 80px;
 }
 .navbox:hover{
-  color:pink
+  color:pink;
 }
 </style>
