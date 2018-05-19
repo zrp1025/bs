@@ -75,6 +75,7 @@
         </div>
       </MessageBox>
     </div>
+    <Bottom></Bottom>
   </div>
 
 </template>
@@ -84,6 +85,7 @@ import axios from 'axios'
 import BookShow from '@/components/BookShow'
 import MessageBox from "@/components/messageBox"
 import 'swiper/dist/css/swiper.css'
+import Bottom from "@/components/bottom"
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
   data() {
@@ -116,7 +118,8 @@ export default {
     swiper,
     swiperSlide,
     MessageBox,
-    NavHeader
+    NavHeader,
+    Bottom
   },
   computed: {
     booksList:function(){
@@ -204,6 +207,8 @@ export default {
   position: absolute;
   right: 0;
   height: auto;
+  z-index: 3;
+  margin-bottom: -650px;
   /* margin-top: 5px; */
 }
 .classify{

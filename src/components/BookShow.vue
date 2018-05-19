@@ -61,9 +61,10 @@
   }
   .bookbox:hover{
     border:1px solid #eee;
+    background-color: #c74637;
   }
   .bookinfo{
-    border: 1px solid snow;
+    border: 1px solid #fff0;
     margin: 20px 20px;
     height: 260px;
   }
@@ -80,6 +81,9 @@
     float: right;
     width: 170px;
     height: 260px;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content:space-around; */
   }
   .bookmsg p{
     color: #aa9960;
@@ -94,7 +98,7 @@
     color:#776634;
   }
   #price{
-    font-size: 20px;
+    font-size: 1.3em;
     font-weight: 700;
   }
   .bookmsg p:nth-child(1){
@@ -110,7 +114,8 @@
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0 1px 2px 0 #dad8be;
-    color: #aa9960
+    color: #fff;
+    background-color: #aa9960;
   }
   .btn-in:hover{
     background: #d6d4b9;
