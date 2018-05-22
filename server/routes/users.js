@@ -292,7 +292,36 @@ router.get("/address", (req, res, next) => {
     }
   });
 });
-
+router.post("/addAddress",(req,res,next) => {
+  let name = req.cookies.token.substring(13);
+  let data = req.body.data;
+  User.findOne({userName: name}, (err, doc) => {
+    if (!doc) {
+      res.json({
+        status: '1',
+        msg: '添加地址失败',
+        result: ''
+      });
+    } else {
+      doc.addressList.push(data);
+      doc.save((err2, doc2) => {
+        if (err2) {
+          res.json({
+            status: "1",
+            msg: err2.message,
+            result: ""
+          });
+        } else {
+          res.json({
+            status: "0",
+            msg: "添加地址成功",
+            result: "suc"
+          });
+        }
+      });
+    }
+  })
+})
 //删除地址
 router.post("/deleteAddress",(req,res,next) => {
   let name = req.cookies.token.substring(13);

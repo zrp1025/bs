@@ -3,7 +3,7 @@
     <div style="margin-left:5%;color:#777">图书>详情页</div>
     <div class="topbox">
       <div class="topleft">
-        <img :src="hcimg" style="width:100%;height:100%"/>
+        <img v-lazy="hcimg" style="width:100%;height:100%"/>
       </div>
       <div class="topmiddle">
         <h1>{{book.title}}</h1>
