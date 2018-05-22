@@ -12,7 +12,7 @@
   <div v-for="oneuser in alllist">
     <div v-for="order in oneuser.orderList">
       <ul :class="[index%2==1?'bggray':'bgwhilte','list']" id="lie"  style="width:95%;height:100px;display:flex;justify-content:space-between;align-items:center" v-for="(goods,index) in order.goodsList">
-        <li><img :src='goods.img' style="height:80px;width:60px;text-align:left" /></li>
+        <li><img v-lazy='goods.img' style="height:80px;width:60px;text-align:left" /></li>
         <li>《{{goods.productName}}》</li>
         <li>{{goods.productNum}}</li>
         <li>{{order.addressInfo.userName}}</li>

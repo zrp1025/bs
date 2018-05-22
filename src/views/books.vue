@@ -6,7 +6,7 @@
       <div style="margin-left:5%;color:#777">图书>详情页</div>
       <div class="topbox">
         <div class="topleft" v-for="item in bookList">
-          <img :src="hcimg" style="width:100%;height:100%" />
+          <img v-lazy="hcimg" style="width:100%;height:100%" />
         </div>
         <div class="topmiddle">
           <h1 style="color:#aa9960">《{{msg.title}}》</h1>
