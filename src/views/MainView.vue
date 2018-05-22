@@ -67,10 +67,20 @@
       <MessageBox :modalShow='badCartshow' >
         <div style="display:flex;align-items:center;flex-direction:column;">
           <svg class="icon" aria-hidden="true" style="font-size:100px;">
-            <use xlink:href="#icon-shibai"></use>
+            <use xlink:href="#icon-cuowu"></use>
           </svg>
           <p style="color:#aa9960;font-size:2em;font-weight:400;position:absolute;top:110px;">
             加入购物车失败
+          </p>
+        </div>
+      </MessageBox>
+      <MessageBox :modalShow='onLogin' >
+        <div style="display:flex;align-items:center;flex-direction:column;">
+          <svg class="icon" aria-hidden="true" style="font-size:70px;margin-top:20px;">
+            <use xlink:href="#icon-cuowu"></use>
+          </svg>
+          <p style="color:#aa9960;font-size:2em;font-weight:400;position:absolute;top:110px;">
+            请先登录，后在进行购买
           </p>
         </div>
       </MessageBox>
@@ -110,7 +120,8 @@ export default {
 
       },
       sucCartshow:false,
-      badCartshow:false
+      badCartshow:false,
+      onLogin:false
     }
   },
   components: {
@@ -166,7 +177,7 @@ export default {
         }else if (res.status==0) {
           this.sucCartOpen()
         }else if (res.status=="10001") {
-          this.badCartOpen()
+          this.noLoginOpen()
         }
         console.log(res);
       })
@@ -184,6 +195,13 @@ export default {
     },
     badCartClose(){
       this.badCartshow=false;
+    },
+    noLoginOpen(){
+      this.onLogin=true;
+      setTimeout(this.noLoginClose,1500);
+    },
+    noLoginClose(){
+      this.onLogin=false;
     },
     toOneBook(item){
       this.$router.push({

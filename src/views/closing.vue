@@ -5,23 +5,58 @@
       <div>
         支付金额：<label class="price">¥{{total-parseInt(total/100)*30}}</label>
         <div>订单号：{{timestamp}}</div>
-        <div>
-          {{address}}
-          {{goods}}
-          {{total}}
-          {{pay}}
+        <div>常用支付方式：</div>
+
+        <div class="paytype">
+          <div class="pay" @click="choicepaytype('ali')">
+            <svg :class="['icon', paytype === 'ali'?'checkpay':'payicon']" aria-hidden="true">
+              <use xlink:href="#icon-alipay"></use>
+            </svg>
+          </div>
+          <div class="pay" @click="choicepaytype('wechat')">
+            <svg :class="['icon', paytype === 'wechat'?'checkpay':'payicon']" aria-hidden="true" >
+              <use xlink:href="#icon-weixinzhifu"></use>
+            </svg>
+          </div>
+          <div @click="toPay" class="submit">
+            立即支付
+          </div>
         </div>
       </div>
-      <div>
-        <div @click="toPay" class="submit">
-          立即支付
+      <div class="payimg" >
+        <div class="graytext">
+          <p>请进行扫码支付</p>
+          {{pay}}
+        </div>
+        <div class="down">
+          <img src="@/assets/img/wechat.jpeg" style="width:120px;height:120px" v-if="paytype === 'wechat'" />
+          <div class="graytext" v-if="paytype === 'wechat'">
+            <p>打开手机微信</p>
+            <p>扫一扫进行支付</p>
+          </div>
+          <img src="@/assets/img/ali.jpeg" style="width:120px;height:120px" v-if="paytype === 'ali'" />
+          <div class="graytext" v-if="paytype === 'ali'">
+            <p>打开手机支付宝</p>
+            <p>扫一扫进行支付</p>
+          </div>
         </div>
       </div>
     </div>
+    <MessageBox :modalShow='successPay' >
+      <div style="display:flex;align-items:center;flex-direction:column;">
+        <svg class="icon" aria-hidden="true" style="font-size:100px;">
+          <use xlink:href="#icon-chenggong"></use>
+        </svg>
+        <p style="color:#aa9960;font-size:2em;font-weight:400;position:absolute;top:110px;">
+          支付成功
+        </p>
+      </div>
+    </MessageBox>
   </div>
 </template>
 <script>
 import NavHeader from "@/components/NavHeader";
+import MessageBox from "@/components/messageBox"
 import axios from "axios";
 export default {
   data() {
@@ -30,11 +65,14 @@ export default {
       timestamp: '',
       address: '',
       goods: '',
-      pay: ''
+      pay: '',
+      paytype: 'ali',
+      successPay: false
       };
   },
   components: {
-    NavHeader
+    NavHeader,
+    MessageBox
   },
   computed: {
     checkgoods(){
@@ -79,8 +117,22 @@ export default {
         console.log(res);
       }).catch(e => {
         console.log(e);
-      })
-    }
+      });
+      this.sucOpen();
+    },
+    choicepaytype(type){
+      this.paytype = type;
+    },
+    sucOpen(){
+      this.successPay=true;
+      setTimeout(this.sucClose,3000);
+    },
+    sucClose(){
+      this.successPay=false;
+      this.$router.push({
+        path:'/'
+      });
+    },
   },
   mounted() {
     this.getinit();
@@ -94,9 +146,12 @@ export default {
 </script>
 <style scoped>
   .wrapper{
-    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    width: 95%;
     height: 450px;
     padding: 20px;
+    background-color: #fff;
   }
   .price{
     font-size: 2em;
@@ -116,5 +171,43 @@ export default {
   }
   .submit:hover{
     background: #d85748;
+  }
+  .paytype {
+    width: 250px;
+    height: 160px;
+    background-color: #fff;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  .payicon{
+    font-size:50px;
+    height: 30px;
+    padding: 3px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+  }
+  .checkpay{
+    font-size:50px;
+    height: 30px;
+    padding: 3px;
+    background-color: #fff;
+    border: 1px solid black;
+  }
+  .payimg{
+    width: 300px;
+    height: 250px;
+    background-color: #fff;
+    padding-top: 20px;
+    padding-left: 40px;
+  }
+  .graytext p{
+    color: #ccc
+  }
+  .down {
+    display: flex;
+    justify-content: space-around;
   }
 </style>

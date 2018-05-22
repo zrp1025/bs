@@ -156,6 +156,7 @@ router.post("/addcart", (req, res, next) => {
         if (item.productId == product.productId) {
           isIn = true;
           item.productNum++;
+          item.checked = 1;
           doc.save((err1, doc1) => {
             if (err1) {
               res.json({

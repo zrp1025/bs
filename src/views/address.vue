@@ -48,8 +48,8 @@
     </table>
     <div class="title">支付方式:</div>
     <div style="width:100%;height:70px;display:flex;flex-direction:row;">
-      <div :class="[pay==='货到付款'?'checkbtn':'btn']" @click="payMethod(1)">货到付款</div>
       <div :class="[pay==='在线支付'?'checkbtn':'btn']" @click="payMethod(2)" >在线支付</div>
+      <div :class="[pay==='货到付款'?'checkbtn':'btn']" @click="payMethod(1)">货到付款</div>
     </div>
     <div id="bottombar" style="display:flex;align-items:flex-end;flex-direction:column;margin-right:30px;">
       <div style="display:flex;flex-direction:row;align-items:center">
@@ -68,6 +68,7 @@
   </div>
 </template>
 <script>
+import Modal from "@/components/Modal"
 import NavHeader from "@/components/NavHeader";
 import axios from "axios";
 export default {
@@ -78,11 +79,14 @@ export default {
       checkIndex: "0",
       selectAddress: "",
       cartlist: [],
-      pay: '货到付款'
+      pay: '在线支付',
+      mdshow:false,
     };
   },
   components: {
-    NavHeader
+    NavHeader,
+    Modal,
+
   },
   computed: {
     checkgoods() {
@@ -121,6 +125,14 @@ export default {
           console.log(this.cartlist);
         }
       });
+    },
+    mdClose(){
+      this.mdshow=false;
+    },
+    mdOpen(){
+      if (!this.islogin) {
+        this.mdshow=true;
+      }
     },
     checkAddress(item, index) {
       this.checkIndex = index;
@@ -236,5 +248,12 @@ export default {
 }
 #bottombar div {
   margin-top: 10px;
+},
+.bg{
+  height: 100%;
+  width: 100%;
+  background-image: url('./../assets/img/sign1.jpg');
+  background-size:50% 100%;
+  background-repeat: no-repeat;
 }
 </style>
