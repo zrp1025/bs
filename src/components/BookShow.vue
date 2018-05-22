@@ -2,7 +2,8 @@
   <div class="bookbox">
     <div class="bookinfo">
       <div class="bookimg">
-        <img :src="hcimg" />
+        <img v-lazy="hcimg" />
+        <!-- <img :src="hcimg" /> -->
       </div>
       <div class="bookmsg">
         <p id="bname" @click="nameclick">《{{name}}》</p>
