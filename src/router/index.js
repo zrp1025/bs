@@ -7,6 +7,7 @@ import CartList from '@/views/cartList'
 import SearchList from '@/views/SearchList'
 import BookList from '@/components/BookList'
 import Address from '@/views/address'
+import Closing from '@/views/closing'
 import Adminindex from '@/views/adminindex'
 import Adminalllist from '@/views/adminalllist'
 import Adminissend from '@/views/adminisend'
@@ -47,6 +48,11 @@ export default new Router({
       path: '/address',
       name: 'Address',
       component: Address
+    },
+    {
+      name: 'Closing',
+      path: '/closing',
+      component: Closing
     },
     {
       path: '/admin',

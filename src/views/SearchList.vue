@@ -13,12 +13,14 @@
         </div>
       </div>
     </div>
+    <Bottom></Bottom>
   </div>
 
 </template>
 <script>
 import NavHeader from "@/components/NavHeader"
 import BookShow from '@/components/BookShow'
+import Bottom from '@/components/bottom'
 import axios from 'axios'
   export default{
     data(){
@@ -30,7 +32,8 @@ import axios from 'axios'
     },
     components:{
       BookShow,
-      NavHeader
+      NavHeader,
+      Bottom
     },
     computed:{
 
@@ -75,11 +78,13 @@ import axios from 'axios'
 <style scoped>
 .booklist {
   width: 100%;
-  /* height: 100%; */
-  position: absolute;
+  position: relative;
+  /* position: absolute; */
+  margin-bottom: -650px;
   right: 0;
   height: auto;
   margin-top: 5px;
+  z-index: 3;
 }
 .featured{
   height: auto;

@@ -54,6 +54,7 @@
     left: 0;
     right: 0;
     background: #fff;
+    border: 1px solid #ddd;
     min-width: 200px;
     width:30%;
     min-height: 200px;

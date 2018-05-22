@@ -22,7 +22,7 @@
               <td class="addadd">{{item.streetName}}</td>
               <td class="addtel">{{item.tel}}</td>
               <td class="del">
-                <svg class="icon" aria-hidden="true" @click="deleteAddress">
+                <svg class="icon" aria-hidden="true" @click="deleteAddress(index)">
                   <use xlink:href="#icon-shanchu"></use>
                 </svg>
               </td>
@@ -48,163 +48,212 @@
     </table>
     <div class="title">支付方式:</div>
     <div style="width:100%;height:70px;display:flex;flex-direction:row;">
-      <div class="checkbtn">货到付款</div>
-      <div class="btn">在线支付</div>
+      <div :class="[pay==='在线支付'?'checkbtn':'btn']" @click="payMethod(2)" >在线支付</div>
+      <div :class="[pay==='货到付款'?'checkbtn':'btn']" @click="payMethod(1)">货到付款</div>
     </div>
     <div id="bottombar" style="display:flex;align-items:flex-end;flex-direction:column;margin-right:30px;">
       <div style="display:flex;flex-direction:row;align-items:center">
         <div>1</div>
-        <div>件商品，总商品价格为¥600</div>
+        <div>件商品，总商品价格为¥{{total}}</div>
       </div>
       <div>运费：0.00</div>
+      <div style="color:#c74637">优惠：每满100减30活动(5.1-5.3)</div>
       <div>寄送至：{{selectAddress.streetName}}&nbsp&nbsp&nbsp&nbsp{{selectAddress.userName}}&nbsp&nbsp&nbsp&nbsp&nbsp {{selectAddress.tel}}</div>
       <div style="display:flex;flex-direction:row;align-items:center;justify-content:space-between;width:100%">
-        <div style="display:flex;flex-direction:row;align-items:center"><div style="margin-left:15px;">应付金额：</div><div style="font-size:2em;color:#c74637">¥ 99.0</div></div>
-        <div class="submit" >提交订单</div>
+        <div style="display:flex;flex-direction:row;align-items:center"><div style="margin-left:15px;">应付金额：</div><div style="font-size:2em;color:#c74637">¥ {{total-parseInt(total/100)*30}}<label style="font-size:0.5em">(已优惠{{parseInt(total/100)*30}}元)</label></div></div>
+        <div class="submit" @click="toClosing" >提交订单</div>
 
       </div>
     </div>
   </div>
 </template>
 <script>
-import NavHeader from "@/components/NavHeader"
-import axios from 'axios';
-  export default{
-    data(){
-      return {
-        msg:'',
-        addresslist:[],
-        checkIndex:'0',
-        selectAddress:'',
-        cartlist:[]
+import Modal from "@/components/Modal"
+import NavHeader from "@/components/NavHeader";
+import axios from "axios";
+export default {
+  data() {
+    return {
+      msg: "",
+      addresslist: [],
+      checkIndex: "0",
+      selectAddress: "",
+      cartlist: [],
+      pay: '在线支付',
+      mdshow:false,
+    };
+  },
+  components: {
+    NavHeader,
+    Modal,
+
+  },
+  computed: {
+    checkgoods() {
+      let goods = [];
+      this.cartlist.forEach(item => {
+        if (item.checked == 1) {
+          goods.push(item);
+        }
+      });
+      return goods;
+    },
+    total() {
+      let n = 0;
+      this.checkgoods.forEach(item => {
+        n += item.productNum * parseFloat(item.salePrice);
+      });
+      return n;
+    }
+  },
+  methods: {
+    getAddress() {
+      axios.get("/users/address").then(response => {
+        let res = response.data;
+        if (res.status == 1) {
+          console.log(res.msg);
+        } else {
+          this.addresslist = res.result;
+          this.cartlist = res.cart;
+          this.cartlist.map(x => {
+            x.img =
+              "https://images.weserv.nl/?url=" + x.productImage.substring(8);
+            return x;
+          });
+          this.selectAddress = this.addresslist[0];
+          console.log(this.addresslist);
+          console.log(this.cartlist);
+        }
+      });
+    },
+    mdClose(){
+      this.mdshow=false;
+    },
+    mdOpen(){
+      if (!this.islogin) {
+        this.mdshow=true;
       }
     },
-    components:{
-      NavHeader
+    checkAddress(item, index) {
+      this.checkIndex = index;
+      this.selectAddress = item;
     },
-    computed:{
-      checkgoods(){
-        let goods=[];
-        this.cartlist.forEach((item)=>{
-          if (item.checked==1) {
-            goods.push(item);
-          }
-        });
-        return goods;
-      }
-    },
-    methods:{
-      getAddress(){
-        axios.get('/users/address').then((response)=>{
-          let res = response.data;
-          if (res.status==1) {
-            console.log(res.msg);
-          }else {
-            this.addresslist=res.result;
-            this.cartlist=res.cart;
-            this.cartlist.map(
-              (x) => {
-                x.img='https://images.weserv.nl/?url='+x.productImage.substring(8);
-                return x
-              }
-            );
-            this.selectAddress=this.addresslist[0];
-            console.log(this.addresslist);
-            console.log(this.cartlist);
-          }
-        })
-      },
-      checkAddress(item,index){
-          this.checkIndex = index;
-          this.selectAddress = item;
-      },
-      deleteAddress(){
-        alert('abc')
-      }
-    },
-    mounted(){
+    deleteAddress(index) {
+      axios.post('/users/deleteAddress',{index}).then(response => {
+        let res = response.data;
+        alert(res.result);
+      });
       this.getAddress();
     },
+    payMethod(type) {
+      if (type === 1) {
+        this.pay = '货到付款'
+      } else {
+        this.pay = '在线支付'
+      }
+      console.log(this.pay);
 
+    },
+    toClosing() {
+      this.$router.push({
+        name: "Closing",
+        params: {
+          address: this.selectAddress,
+          goods: this.checkgoods,
+          payMethod: this.pay
+        }
+      });
+    }
+  },
+  mounted() {
+    this.getAddress();
   }
+};
 </script>
 <style scoped>
-  #wrapper{
-    width: 100%;
-    /* height: 400px; */
-    margin: 0 auto;
-    border-top: 5px solid #c74637;
-    padding-top: 30px;
-  }
-  .addtr{
-    background: #fff;
-    cursor: pointer;
-    text-align: center;
-  }
-  .checkaddtr{
-    background-color: #FFFFE0;
-    text-align: center;
-    cursor: pointer;
-  }
-  .addtr:hover{
-    background-color: #FFFFE0
-  }
-  .del:hover{
-    color: skyblue
-  }
-  .title{
-    color:#aa9960;
-    font-weight:900;
-    font-size:1.2em;
-    margin-left: 15px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-right: 40px;
-  }
-  .btn{
-    width: 100px;
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    cursor: pointer;
-    box-shadow: 0 1px 2px 0 #dad8be;
-    color: #666;
-    background-color: #f2f2f2;
-    font-weight: 900;
-    margin-left: 15px;
-  }
-  .btn:hover{
-    background: #aa9960;
-  }
-  .checkbtn{
-    width: 100px;
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    cursor: pointer;
-    box-shadow: 0 1px 2px 0 #dad8be;
-    color: #666;
-    background-color: #aa9960;
-    font-weight: 900;
-    margin-left: 15px;
-  }
-  .submit{
-    width: 100px;
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    cursor: pointer;
-    box-shadow: 0 1px 2px 0 #dad8be;
-    color: #fff;
-    background-color: #c74637;
-    font-weight: 900;
-    margin-left: 15px;
-  }
-  .submit:hover{
-    background: #d85748;
-  }
-  #bottombar div{
-    margin-top: 10px;
-  }
+#wrapper {
+  width: 100%;
+  /* height: 400px; */
+  margin: 0 auto;
+  border-top: 5px solid #c74637;
+  padding-top: 30px;
+}
+.addtr {
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+}
+.checkaddtr {
+  background-color: #ffffe0;
+  text-align: center;
+  cursor: pointer;
+}
+.addtr:hover {
+  background-color: #ffffe0;
+}
+.del:hover {
+  color: skyblue;
+}
+.title {
+  color: #aa9960;
+  font-weight: 900;
+  font-size: 1.2em;
+  margin-left: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-right: 40px;
+}
+.btn {
+  width: 100px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 #dad8be;
+  color: #666;
+  background-color: #f2f2f2;
+  font-weight: 900;
+  margin-left: 15px;
+}
+.btn:hover {
+  background: #aa9960;
+}
+.checkbtn {
+  width: 100px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 #dad8be;
+  color: #666;
+  background-color: #aa9960;
+  font-weight: 900;
+  margin-left: 15px;
+}
+.submit {
+  width: 100px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 #dad8be;
+  color: #fff;
+  background-color: #c74637;
+  font-weight: 900;
+  margin-left: 15px;
+}
+.submit:hover {
+  background: #d85748;
+}
+#bottombar div {
+  margin-top: 10px;
+},
+.bg{
+  height: 100%;
+  width: 100%;
+  background-image: url('./../assets/img/sign1.jpg');
+  background-size:50% 100%;
+  background-repeat: no-repeat;
+}
 </style>
