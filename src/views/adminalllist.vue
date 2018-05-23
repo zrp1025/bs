@@ -7,7 +7,7 @@
     <li>收货人</li>
     <li style="width:200px;">收货地址</li>
     <li>收货电话</li>
-    <li>编辑</li>
+    <li>状态</li>
   </ul>
   <div v-for="oneuser in alllist">
     <div v-for="order in oneuser.orderList">
@@ -19,9 +19,12 @@
         <li style="width: 200px;">{{order.addressInfo.streetName}}</li>
         <li>{{order.addressInfo.tel}}</li>
         <li>
-        　<div class="submit">
-            确认发货
-          </div>
+          <svg class="icon" style="cursor:pointer" aria-hidden="true" v-if="order.orderStatus==0?true:false" >
+            <use xlink:href="#icon-daifahuo"></use>
+          </svg>
+          <svg class="icon" style="cursor:pointer" aria-hidden="true" v-if="order.orderStatus==1?true:false">
+            <use xlink:href="#icon-yifahuo"></use>
+          </svg>
         </li>
       </ul>
     </div>
@@ -54,6 +57,9 @@ export default {
           console.log(this.alllist);
         }
       })
+    },
+    sendOut(order) {
+      console.log(order);
     }
   },
   mounted() {
