@@ -14,10 +14,21 @@
         </div>
       </div>
     </div>
+    <MessageBox :modalShow='sucCartshow' >
+      <div style="display:flex;align-items:center;flex-direction:column;">
+        <svg class="icon" aria-hidden="true" style="font-size:100px;">
+          <use xlink:href="#icon-chenggong"></use>
+        </svg>
+        <p style="color:#aa9960;font-size:2em;font-weight:400;position:absolute;top:110px;">
+          加入购物车成功
+        </p>
+      </div>
+    </MessageBox>
   </div>
 </template>
 <script>
 import NavHeader from "@/components/NavHeader"
+import MessageBox from "@/components/messageBox"
 import BookShow from '@/components/BookShow'
 import axios from 'axios'
   export default{
@@ -25,12 +36,14 @@ import axios from 'axios'
       return {
         msg:'',
         bookList:[],
-        lastTag:''
+        lastTag:'',
+        sucCartshow:false
       }
     },
     components:{
       BookShow,
-      NavHeader
+      NavHeader,
+      MessageBox
     },
     computed:{
 
@@ -56,8 +69,22 @@ import axios from 'axios'
       addcart(bookmessage){
         axios.post('/users/addcart',{bookmessage:bookmessage}).then((response)=>{
           let res = response.data;
+          if (res.status==1) {
+            this.badCartOpen()
+          }else if (res.status==0) {
+            this.sucCartOpen()
+          }else if (res.status=="10001") {
+            this.noLoginOpen()
+          }
           console.log(res);
         })
+      },
+      sucCartOpen(){
+        this.sucCartshow=true;
+        setTimeout(this.sucCartClose,1500);
+      },
+      sucCartClose(){
+        this.sucCartshow=false;
       },
       toOneBook(item){
         this.$router.push({

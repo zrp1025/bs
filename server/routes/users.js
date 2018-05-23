@@ -98,8 +98,8 @@ router.get("/checklogin", (req, res, next) => {
 router.post("/signin", (req, res, next) => {
   let Name = req.body.userName,
     Pwd = req.body.userPwd,
-    timestamp = new Date.getTime();
-  userId = parseInt(Math.random() * 1000000000) + timestamp;
+    Timestamp = new Date().getTime();
+  userId = parseInt(Math.random() * 1000000000) + Timestamp;
   let arr = [{ userId: userId, userName: Name, userPwd: Pwd }];
   User.findOne({ userName: Name }, (err, doc) => {
     if (doc) {
