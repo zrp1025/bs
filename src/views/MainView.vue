@@ -80,7 +80,7 @@
             <use xlink:href="#icon-cuowu"></use>
           </svg>
           <p style="color:#aa9960;font-size:2em;font-weight:400;position:absolute;top:110px;">
-            请先登录，后在进行购买
+            未登录，请先登录
           </p>
         </div>
       </MessageBox>
