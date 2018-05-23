@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req,res,next)=>{
   if (req.cookies.token) {
-    next()
+      next();
   }else if (req.path=='/users/signin'||req.path=='/users/login'||req.originalUrl=='/users/checklogin'||req.path=='/booklist') {
     next()
   }else {

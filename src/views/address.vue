@@ -81,10 +81,19 @@
     <Modal :modalShow='inaddShow' @modalClose='inaddClose'>
       <div class="bg">
         <div style="font-size:30px;margin: 40px 100px;font-Weight:500;color:#a65b44;">新增收获地址</div>
-        <input class="input" type="text" placeholder="请输入收货人名" v-model="userName" />
-        <input class="input" type="text" placeholder="请输入地址" v-model="streetName" />
-        <input class="input" type="text" placeholder="请输入联系电话" v-model="tel" />
-        <div class="skybgbtn" style="margin-bottom:10px;" @click='addAddress' >添加地址</div>
+        <div>
+          <label style="color:#a65b44" for="userName">&nbsp&nbsp&nbsp&nbsp收货人：</label>
+          <input id="userName" class="input" type="text" placeholder="请输入收货人名" v-model="userName" />
+        </div>
+        <div>
+          <label style="color:#a65b44" for="streetName">收获地址：</label>
+          <input id="streetName" class="input" type="text" placeholder="请输入地址" v-model="streetName" />
+        </div>
+        <div>
+          <label style="color:#a65b44" for="tel">联系电话：</label>
+          <input id="tel" class="input" type="number" placeholder="请输入联系电话" v-model="tel" />
+        </div>
+          <div class="skybgbtn" style="margin-bottom:10px;" @click='addAddress' >添加地址</div>
       </div>
     </Modal>
 
@@ -180,8 +189,9 @@ export default {
       axios.post('/users/deleteAddress',{index}).then(response => {
         let res = response.data;
         this.modalClose();
+        this.getAddress();
       });
-      this.getAddress();
+
     },
     payMethod(type) {
       if (type === 1) {
@@ -337,5 +347,24 @@ export default {
 }
 .skybgbtn:hover {
   background-color: #d8ae9f;
+}
+.input{
+  width:290px;
+  height:40px;
+  /* border-radius:20px; */
+  /* border:1px solid #1e90ff; */
+  margin-bottom: 10px;
+  padding-left: 10px;
+  background: none;
+  border:none;
+  border-bottom: 1px solid #a65b44;
+}
+.bg{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
 </style>

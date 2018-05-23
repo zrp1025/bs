@@ -6,8 +6,7 @@
         支付金额：<label class="price">¥{{total-parseInt(total/100)*30}}</label>
         <div>订单号：{{timestamp}}</div>
         <div>常用支付方式：</div>
-
-        <div class="paytype">
+        <div class="paytype" v-if="!payMethod">
           <div class="pay" @click="choicepaytype('ali')">
             <svg :class="['icon', paytype === 'ali'?'checkpay':'payicon']" aria-hidden="true">
               <use xlink:href="#icon-alipay"></use>
@@ -22,8 +21,15 @@
             立即支付
           </div>
         </div>
+        <div class="paytype" v-if="payMethod">
+          <div @click="toPay" class="pay">
+            <svg class="icon" aria-hidden="true" >
+              <use xlink:href="#icon-huodaofukuan1"></use>
+            </svg>
+          </div>
+        </div>
       </div>
-      <div class="payimg" >
+      <div class="payimg" v-if="!payMethod" >
         <div class="graytext">
           <p>请进行扫码支付</p>
           {{pay}}
@@ -65,7 +71,7 @@ export default {
       timestamp: '',
       address: '',
       goods: '',
-      pay: '',
+      pay: '货到付款',
       paytype: 'ali',
       successPay: false
       };
@@ -99,6 +105,13 @@ export default {
         goodsList: this.goods,
         orderStatus: '0',
         createDate: this.orderId
+      }
+    },
+    payMethod(){
+      if (this.pay == '货到付款') {
+        return true;
+      }else {
+        return false;
       }
     }
   },
@@ -140,7 +153,7 @@ export default {
     this.goods = this.$route.params.goods;
     this.pay = this.$route.params.payMethod;
     this.address.payMethod = this.pay;
-    console.log(this.address);
+    console.log(this.address, 'address');
   }
 };
 </script>
@@ -209,5 +222,11 @@ export default {
   .down {
     display: flex;
     justify-content: space-around;
+  }
+  .icon{
+    font-size: 100px;
+  }
+  .pay{
+    cursor: pointer;
   }
 </style>
