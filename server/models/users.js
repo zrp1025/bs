@@ -5,6 +5,7 @@ let usersSchema = new Schema({
 	"userId":String,
 	"userPwd":String,
 	"userName":String,
+	"isAdmin":Boolean,
 	"orderList":Array,
 	"cartList":[
 		{

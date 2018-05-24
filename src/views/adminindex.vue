@@ -30,6 +30,7 @@
 </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -41,6 +42,19 @@ export default {
 
   },
   methods: {
+    checkLogin(){
+      axios.get('users/checkadmin').then((response)=>{
+        let res = response.data;
+        if (res.status==0) {
+          console.log(res.msg);
+        }else{
+          console.log(res.msg);
+          this.$router.push({
+            path:'/adminLogin'
+          })
+        }
+      })
+    },
     toalllist(){
       this.$router.push({
         path:'/admin'
@@ -66,7 +80,7 @@ export default {
 
   },
   mounted() {
-
+    this.checkLogin();
   }
 }
 </script>
