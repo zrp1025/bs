@@ -28,6 +28,9 @@
               </td>
             </tr>
           </table>
+          <div style="text-align:center" v-if="noAddress">
+            暂无收货地址
+          </div>
     </div>
     <div class="title">购物清单:</div>
     <table style="width:100%;height:50px;overflow-y:auto">
@@ -118,6 +121,7 @@ export default {
       userName:'',
       streetName:'',
       tel:'',
+      noAddress:''
 
     };
   },
@@ -150,7 +154,18 @@ export default {
         let res = response.data;
         if (res.status == 1) {
           console.log(res.msg);
+        } else if (res.result.length===0) {
+          console.log('暂时没有数据');
+          this.noAddress=true;
+          this.addresslist='';
+          this.cartlist = res.cart;
+          this.cartlist.map(x => {
+            x.img =
+              "https://images.weserv.nl/?url=" + x.productImage.substring(8);
+            return x;
+          });
         } else {
+          this.noAddress=false;
           this.addresslist = res.result;
           this.cartlist = res.cart;
           this.cartlist.map(x => {
@@ -203,14 +218,18 @@ export default {
 
     },
     toClosing() {
-      this.$router.push({
-        name: "Closing",
-        params: {
-          address: this.selectAddress,
-          goods: this.checkgoods,
-          payMethod: this.pay
-        }
-      });
+      if (!this.noAddress) {
+        this.$router.push({
+          name: "Closing",
+          params: {
+            address: this.selectAddress,
+            goods: this.checkgoods,
+            payMethod: this.pay
+          }
+        });
+      } else {
+        console.log('地址不能为空');
+      }
     },
     modalClose() {
       this.checkDelete = false;
