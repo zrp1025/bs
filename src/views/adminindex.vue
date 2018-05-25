@@ -8,6 +8,14 @@
   <div id="left">
     <img src="@/assets/img/admin.png" style="border-radius:120px;margin-top:30px;" width="120px" height="120px" />
     <img src="@/assets/img/title.png" width="80%" height="100px" />
+    <div class="navbox" style="background:#0000;height:30px;">
+      <label style="position:relative;bottom:5px;">用户名：{{name}}</label>
+    </div>
+    <div class="navbox" style="background:#0000;height:50px;" @click="logout">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-tuichu1"></use>
+      </svg>
+    </div>
     <div class="navbox" @click="toalllist" >
       查询所有订单
     </div>
@@ -30,10 +38,12 @@
 </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
-      msg: ''
+      msg: '',
+      name: ''
     }
   },
   components: {},
@@ -41,6 +51,20 @@ export default {
 
   },
   methods: {
+    checkLogin(){
+      axios.get('users/checkadmin').then((response)=>{
+        let res = response.data;
+        if (res.status==0) {
+          console.log(res.msg);
+          this.name = res.result;
+        }else{
+          console.log(res.msg);
+          this.$router.push({
+            path:'/adminLogin'
+          })
+        }
+      })
+    },
     toalllist(){
       this.$router.push({
         path:'/admin'
@@ -63,10 +87,17 @@ export default {
         path:'/adminalluser'
       })
     },
-
+    logout(){
+      axios.get('/users/logout').then((response)=>{
+        let res = response.data;
+      })
+      this.$router.push({
+        path:'/adminLogin'
+      })
+    }
   },
   mounted() {
-
+    this.checkLogin();
   }
 }
 </script>
@@ -111,7 +142,7 @@ export default {
   text-align: center;
   cursor: pointer;
   position: relative;
-  top: 80px;
+  top: 10px;
 }
 .navbox:hover{
   color:pink;

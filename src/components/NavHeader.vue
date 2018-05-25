@@ -69,6 +69,7 @@
         <img src="./../assets/img/sign2.png" style="width:280px;height:160px;position:absolute;top:20px;left:20px" />
         <div class="signon">
           <div style="font-size:30px;margin: 40px 100px;font-Weight:500;color:#a65b44;">用户登录</div>
+          <div v-if="loginerror" style="margin-right:90px;color:red">用户名或者密码错误</div>
           <input class="input" type="text" placeholder="请输入用户名" v-model="user" />
           <input class="input" type="password" placeholder="请输入密码" v-model="password" @keyup.enter="login" />
           <div class="skybgbtn" style="margin-bottom:10px;" @click="login">登录</div>
@@ -105,8 +106,8 @@ import axios from 'axios'
         errTip:false,
         loginName:'',
         islogin:false,
-        searchValue:''
-
+        searchValue:'',
+        loginerror:false
       }
     },
     components:{
@@ -168,11 +169,12 @@ import axios from 'axios'
           }).then((response)=>{
             let res = response.data;
             if (res.status==1) {
-              //失败
+              this.loginerror = true;
               this.errTip=true;
               console.log(res.msg);
             }else{
               //成功
+              this.loginerror = false;
               this.mdClose();
               this.loginName=res.result;
               this.islogin=true;

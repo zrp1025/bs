@@ -43,7 +43,36 @@ router.get("/login", (req, res, next) => {
   let user = req.param("user"),
     pass = req.param("pass"),
     data = Date.parse(new Date());
-  User.findOne({ userName: user, userPwd: pass }, (err, doc) => {
+  User.findOne(
+    { userName: user, userPwd: pass, isAdmin: false },
+    (err, doc) => {
+      if (!doc) {
+        res.json({
+          status: "1",
+          msg: "登录失败",
+          result: ""
+        });
+      } else {
+        res.cookie("token", data + doc.userName, {
+          path: "/",
+          maxAge: 60 * 60 * 1000
+        });
+        res.json({
+          status: "0",
+          msg: "登录成功",
+          result: doc.userName,
+          data: data
+        });
+      }
+    }
+  );
+});
+//管理员登录
+router.get("/adminlogin", (req, res, next) => {
+  let user = req.param("user"),
+    pass = req.param("pass"),
+    data = "admin" + Date.parse(new Date());
+  User.findOne({ userName: user, userPwd: pass, isAdmin: true }, (err, doc) => {
     if (!doc) {
       res.json({
         status: "1",
@@ -79,11 +108,34 @@ router.get("/logout", (req, res, next) => {
 
 //验证登录
 router.get("/checklogin", (req, res, next) => {
-  if (req.cookies.token) {
+  if (
+    typeof req.cookies.token != "undefined" &&
+    req.cookies.token.slice(0, 5) != "admin"
+  ) {
     res.json({
       status: "0",
       msg: "登录成功",
       result: req.cookies.token.slice(13) || ""
+    });
+  } else {
+    res.json({
+      status: "1",
+      msg: "未登录",
+      result: ""
+    });
+  }
+});
+//验证管理员
+router.get("/checkadmin", (req, res, next) => {
+  if (
+    typeof req.cookies.token != "undefined" &&
+    req.cookies.token.slice(0, 5) === "admin"
+  ) {
+    res.json({
+      status: "0",
+      msg: "是管理员且登录成功",
+      result: req.cookies.token.slice(18)
+      // result: req.cookies.token.slice(13) || ""
     });
   } else {
     res.json({
@@ -98,9 +150,9 @@ router.get("/checklogin", (req, res, next) => {
 router.post("/signin", (req, res, next) => {
   let Name = req.body.userName,
     Pwd = req.body.userPwd,
-    timestamp = new Date.getTime();
-  userId = parseInt(Math.random() * 1000000000) + timestamp;
-  let arr = [{ userId: userId, userName: Name, userPwd: Pwd }];
+    Timestamp = new Date().getTime();
+  userId = parseInt(Math.random() * 1000000000) + Timestamp;
+  let arr = [{ userId: userId, userName: Name, userPwd: Pwd, isAdmin: false }];
   User.findOne({ userName: Name }, (err, doc) => {
     if (doc) {
       res.json({
@@ -292,20 +344,49 @@ router.get("/address", (req, res, next) => {
     }
   });
 });
-
-//删除地址
-router.post("/deleteAddress",(req,res,next) => {
+router.post("/addAddress", (req, res, next) => {
   let name = req.cookies.token.substring(13);
-  let index = req.body.index;
-  User.findOne({userName: name}, (err, doc) => {
+  let data = req.body.data;
+  User.findOne({ userName: name }, (err, doc) => {
     if (!doc) {
       res.json({
-        status: '1',
-        msg: '删除地址失败',
-        result: ''
+        status: "1",
+        msg: "添加地址失败",
+        result: ""
       });
     } else {
-      doc.addressList.splice(index,1);
+      doc.addressList.push(data);
+      doc.save((err2, doc2) => {
+        if (err2) {
+          res.json({
+            status: "1",
+            msg: err2.message,
+            result: ""
+          });
+        } else {
+          res.json({
+            status: "0",
+            msg: "添加地址成功",
+            result: "suc"
+          });
+        }
+      });
+    }
+  });
+});
+//删除地址
+router.post("/deleteAddress", (req, res, next) => {
+  let name = req.cookies.token.substring(13);
+  let index = req.body.index;
+  User.findOne({ userName: name }, (err, doc) => {
+    if (!doc) {
+      res.json({
+        status: "1",
+        msg: "删除地址失败",
+        result: ""
+      });
+    } else {
+      doc.addressList.splice(index, 1);
       doc.save((err2, doc2) => {
         if (err2) {
           res.json({
@@ -322,9 +403,8 @@ router.post("/deleteAddress",(req,res,next) => {
         }
       });
     }
-  })
-})
-
+  });
+});
 
 //查询所有信息
 router.get("/all", (req, res, next) => {
@@ -381,4 +461,60 @@ router.post("/pay", (req, res, next) => {
   });
 });
 
+//发货
+router.post("/sendout", (req, res, next) => {
+  let name = req.body.user,
+    pass = req.body.pass,
+    orderId = req.body.orderId;
+  User.findOne({ userName: name, userPwd: pass }, (err, doc) => {
+    if (!doc) {
+      res.json({
+        status: "1",
+        msg: "发货失败",
+        result: ""
+      });
+    } else {
+      doc.orderList.forEach(item => {
+        if (item.orderId == orderId) {
+          item.orderStatus = "1";
+        }
+      });
+      doc.save((err2, doc2) => {
+        if (!doc2) {
+          res.json({
+            status: "1",
+            msg: err2.message,
+            result: ""
+          });
+        } else {
+          res.json({
+            status: "0",
+            msg: "发货成功",
+            result: doc.orderList
+          });
+        }
+      });
+    }
+  });
+});
+//管理员删除用户
+router.post("/deleteuser", (req, res, next) => {
+  let name = req.body.userName,
+    pass = req.body.pass;
+  User.deleteOne({ userName: name, userPwd: pass }, err => {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message,
+        result: ""
+      });
+    } else {
+      res.json({
+        status: "0",
+        msg: "删除成功",
+        result: ""
+      });
+    }
+  });
+});
 module.exports = router;

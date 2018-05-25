@@ -13,6 +13,7 @@ import Adminalllist from '@/views/adminalllist'
 import Adminissend from '@/views/adminisend'
 import Adminnosend from '@/views/adminnosend'
 import Adminalluser from '@/views/adminalluser'
+import AdminLogin from '@/views/adminLogin'
 
 Vue.use(Router)
 
@@ -54,6 +55,12 @@ export default new Router({
       path: '/closing',
       component: Closing
     },
+    {
+      name: 'AdminLogin',
+      path: '/adminLogin',
+      component: AdminLogin
+    },
+
     {
       path: '/admin',
       component: Adminindex,
