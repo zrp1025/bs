@@ -108,7 +108,10 @@ router.get("/logout", (req, res, next) => {
 
 //验证登录
 router.get("/checklogin", (req, res, next) => {
-  if (req.cookies.token) {
+  if (
+    typeof req.cookies.token != "undefined" &&
+    req.cookies.token.slice(0, 5) != "admin"
+  ) {
     res.json({
       status: "0",
       msg: "登录成功",
@@ -125,12 +128,13 @@ router.get("/checklogin", (req, res, next) => {
 //验证管理员
 router.get("/checkadmin", (req, res, next) => {
   if (
-    typeof(req.cookies.token) != "undefined" &&
+    typeof req.cookies.token != "undefined" &&
     req.cookies.token.slice(0, 5) === "admin"
   ) {
     res.json({
       status: "0",
-      msg: "是管理员且登录成功"
+      msg: "是管理员且登录成功",
+      result: req.cookies.token.slice(18)
       // result: req.cookies.token.slice(13) || ""
     });
   } else {
@@ -457,4 +461,60 @@ router.post("/pay", (req, res, next) => {
   });
 });
 
+//发货
+router.post("/sendout", (req, res, next) => {
+  let name = req.body.user,
+    pass = req.body.pass,
+    orderId = req.body.orderId;
+  User.findOne({ userName: name, userPwd: pass }, (err, doc) => {
+    if (!doc) {
+      res.json({
+        status: "1",
+        msg: "发货失败",
+        result: ""
+      });
+    } else {
+      doc.orderList.forEach(item => {
+        if (item.orderId == orderId) {
+          item.orderStatus = "1";
+        }
+      });
+      doc.save((err2, doc2) => {
+        if (!doc2) {
+          res.json({
+            status: "1",
+            msg: err2.message,
+            result: ""
+          });
+        } else {
+          res.json({
+            status: "0",
+            msg: "发货成功",
+            result: doc.orderList
+          });
+        }
+      });
+    }
+  });
+});
+//管理员删除用户
+router.post("/deleteuser", (req, res, next) => {
+  let name = req.body.userName,
+    pass = req.body.pass;
+  User.deleteOne({ userName: name, userPwd: pass }, err => {
+    if (err) {
+      res.json({
+        status: "1",
+        msg: err.message,
+        result: ""
+      });
+    } else {
+      res.json({
+        status: "0",
+        msg: "删除成功",
+        result: ""
+      });
+    }
+  });
+});
 module.exports = router;

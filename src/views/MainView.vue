@@ -66,10 +66,10 @@
       </MessageBox>
       <MessageBox :modalShow='badCartshow' >
         <div style="display:flex;align-items:center;flex-direction:column;">
-          <svg class="icon" aria-hidden="true" style="font-size:100px;">
-            <use xlink:href="#icon-cuowu"></use>
+          <svg class="icon" aria-hidden="true" style="font-size:80px;margin-top:20px;">
+            <use xlink:href="#icon-shibai2"></use>
           </svg>
-          <p style="color:#aa9960;font-size:2em;font-weight:400;position:absolute;top:110px;">
+          <p style="color:#c74637;font-size:1em;font-weight:400;position:absolute;top:130px;">
             加入购物车失败
           </p>
         </div>
