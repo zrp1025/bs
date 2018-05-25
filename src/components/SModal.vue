@@ -58,9 +58,9 @@
     min-width: 400px;
     width:40%;
     min-height: 200px;
-    height: 60%;
+    height: 50%;
     z-index: 201;
-
+    border-radius: 20px;
   }
   .overlay{
     position: fixed;
